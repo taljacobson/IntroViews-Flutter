@@ -44,10 +44,10 @@ class _PageDraggerState extends State<PageDragger> {
     if (dragStart != null) {
       Duration dragDuration = details.sourceTimeStamp - startDragDuration;
       //Getting new position details
-      final newPosition = details.globalPosition;
+      final Offset newPosition = details.globalPosition;
       //Change in position in x
-      final dx = dragStart.dx - newPosition.dx;
-      var deltaSpeed = details.delta.dx.abs() / dragDuration.inMilliseconds ?? 1.0;
+      final double dx = dragStart.dx - newPosition.dx;
+      final double deltaSpeed = details.delta.dx.abs() / dragDuration.inMilliseconds ?? 1.0;
       //predicting slide direction
       if (dx > 0.0 && widget.canDragRightToLeft) {
         slideDirection = SlideDirection.rightToLeft;
@@ -59,7 +59,7 @@ class _PageDraggerState extends State<PageDragger> {
       //predicting slide percent
       if (slideDirection != SlideDirection.none) {
         //clamp method is used to clamp the value of slidePercent from 0.0 to 1.0, after 1.0 it set to 1.0
-        var fullPositionPx = widget.fullTransitionPX - deltaSpeed * 20;
+        final double fullPositionPx = widget.fullTransitionPX - deltaSpeed * 20;
         slidePercent = (dx / fullPositionPx).abs().clamp(0.0, 1.0);
       } else {
         slidePercent = 0.0;
