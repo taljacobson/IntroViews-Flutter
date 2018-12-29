@@ -24,15 +24,15 @@ class DefaultButton extends StatelessWidget {
     //Calculating opacity to create a fade in effect
     double opacity = 1.0;
     final TextStyle style = DefaultTextStyle.of(context).style;
-    if (pageButtonViewModel.activePageIndex ==
-            pageButtonViewModel.totalPages - 2 &&
-        pageButtonViewModel.slideDirection == SlideDirection.rightToLeft) {
-      opacity = 1.0 - pageButtonViewModel.slidePercent;
-    } else if (pageButtonViewModel.activePageIndex ==
-            pageButtonViewModel.totalPages - 1 &&
-        pageButtonViewModel.slideDirection == SlideDirection.leftToRight) {
-      opacity = pageButtonViewModel.slidePercent;
-    }
+    // if (pageButtonViewModel.activePageIndex ==
+    //         pageButtonViewModel.totalPages - 2 &&
+    //     pageButtonViewModel.slideDirection == SlideDirection.rightToLeft) {
+    //   opacity = 1.0 - pageButtonViewModel.slidePercent;
+    // // } else if (pageButtonViewModel.activePageIndex ==
+    // //         pageButtonViewModel.totalPages - 1 &&
+    // //     pageButtonViewModel.slideDirection == SlideDirection.leftToRight) {
+    // //   opacity = pageButtonViewModel.slidePercent;
+    // }
 
     return FlatButton(
       onPressed: onTap,
@@ -129,7 +129,7 @@ class PageIndicatorButtons extends StatelessWidget {
     } else if (activePageIndex == totalPages - 1 ||
         (activePageIndex == totalPages - 2 &&
                 slideDirection == SlideDirection.rightToLeft ||
-            doneButtonPersist)) {
+            doneButtonPersist)) { 
       return DoneButton(
         child: doneText,
         onTap: onPressedDoneButton,
