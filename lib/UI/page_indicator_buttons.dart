@@ -207,22 +207,24 @@ class PageIndicatorButtons extends StatelessWidget {
       left: 0.0,
       right: 0.0,
       bottom: 0.0,
-      child: DefaultTextStyle(
-        style: textStyle,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: _getSkipORBackButton() //Row
-                ), //Padding
-            Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: _getDoneORNextButton() //Row
-                )
-          ],
+      child: SafeArea(
+        child: DefaultTextStyle(
+          style: textStyle,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: _getSkipORBackButton() //Row
+                  ), //Padding
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: _getDoneORNextButton() //Row
+                  )
+            ],
+          ),
         ),
       ),
     );
