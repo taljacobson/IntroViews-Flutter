@@ -7,7 +7,6 @@ import 'package:intro_views_flutter/Animation_Gesture/animated_page_dragger.dart
 import 'package:intro_views_flutter/Animation_Gesture/page_dragger.dart';
 import 'package:intro_views_flutter/Animation_Gesture/page_reveal.dart';
 import 'package:intro_views_flutter/Constants/constants.dart';
-import 'package:intro_views_flutter/Models/page_button_view_model.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/Models/pager_indicator_view_model.dart';
 import 'package:intro_views_flutter/Models/slide_update_model.dart';
@@ -100,8 +99,8 @@ class IntroViewsFlutter extends StatefulWidget {
     this.showSkipButton = true,
     this.pageButtonTextStyles,
     this.onTapBackButton,
-    this.showNextButton = true,
-    this.showBackButton = true,
+    this.showNextButton = false,
+    this.showBackButton = false,
     this.pageButtonTextSize = 18.0,
     this.pageButtonFontFamily,
     this.onTapSkipButton,
@@ -266,19 +265,9 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                alignment: Alignment.bottomCenter,
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: IconButton(
-                  icon: Icon(Icons.chevron_left, color: Colors.white),
-                  onPressed: () {
-                    if (canDragLeftToRight) {
-                      _animateToPage(SlideDirection.leftToRight);
-                    }
-                  },
-                ),
+              SizedBox(
+                width: 55.0,
               ),
-
               Expanded(
                 child: PagerIndicator(
                   //bottom page indicator
@@ -290,40 +279,9 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
                   ),
                 ),
               ),
-
-              Container(
-                alignment: Alignment.bottomCenter,
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: !widget.doneButtonPersist &&
-                        (activePageIndex == pages.length - 1 ||
-                            (activePageIndex == pages.length - 2 &&
-                                slideDirection == SlideDirection.rightToLeft))
-                    ? DefaultTextStyle(
-                        style: widget.pageButtonTextStyles,
-                        child: DoneButton(
-                          child: widget.doneText,
-                          onTap: widget.onTapDoneButton,
-                          pageButtonViewModel: PageButtonViewModel(
-                            //view Model
-                            activePageIndex: activePageIndex,
-                            totalPages: pages.length,
-                            slidePercent: widget.doneButtonPersist ? 0.0 : slidePercent,
-                            slideDirection: slideDirection,
-                          ),
-                        ),
-                      )
-                    : IconButton(
-                        icon: Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (canDragRightToLeft) {
-                            _animateToPage(SlideDirection.rightToLeft);
-                          }
-                        },
-                      ),
-              ), //PagerIndicator
+              SizedBox(
+                width: 55,
+              ),
             ],
           ),
 
@@ -338,42 +296,40 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
             slideDirection: slideDirection,
             onPressedSkipButton: () {
               //method executed on pressing skip button
-              setState(() {
-                activePageIndex = pages.length - 1;
-                nextPageIndex = activePageIndex;
-                // after skip pressed invoke function
-                // this can be used for analytics/page transition
-                if (widget.onTapSkipButton != null) {
-                  widget.onTapSkipButton();
-                }
-              });
+
+              activePageIndex = pages.length - 2;
+              // nextPageIndex = activePageIndex ;
+              _animateToPage(SlideDirection.rightToLeft);
+              // after skip pressed invoke function
+              // this can be used for analytics/page transition
+              if (widget.onTapSkipButton != null) {
+                widget.onTapSkipButton();
+              }
             },
             showSkipButton: widget.showSkipButton,
             showNextButton: widget.showNextButton,
             showBackButton: widget.showBackButton,
             onPressedNextButton: () {
               //method executed on pressing next button
-              setState(() {
-                activePageIndex = activePageIndex + 1;
-                nextPageIndex = nextPageIndex + 1;
-                // after next pressed invoke function
-                // this can be used for analytics/page transition
-                if (widget.onTapNextButton != null) {
-                  widget.onTapNextButton();
-                }
-              });
+              if (canDragRightToLeft) {
+                _animateToPage(SlideDirection.rightToLeft);
+              }
+              // after next pressed invoke function
+              // this can be used for analytics/page transition
+              if (widget.onTapNextButton != null) {
+                widget.onTapNextButton();
+              }
             },
             onPressedBackButton: () {
               //method executed on pressing back button
-              setState(() {
-                activePageIndex = activePageIndex - 1;
-                nextPageIndex = nextPageIndex - 1;
-                // after next pressed invoke function
-                // this can be used for analytics/page transition
-                if (widget.onTapBackButton != null) {
-                  widget.onTapBackButton();
-                }
-              });
+              if (canDragLeftToRight) {
+                _animateToPage(SlideDirection.leftToRight);
+              }
+              // after next pressed invoke function
+              // this can be used for analytics/page transition
+              if (widget.onTapBackButton != null) {
+                widget.onTapBackButton();
+              }
             },
             nextText: widget.nextText,
             doneText: widget.doneText,
@@ -386,13 +342,12 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
     ); //Scaffold
   }
 
-
   void _animateToPage(SlideDirection slideDirection) {
     if (slideDirection == SlideDirection.rightToLeft &&
         widget.pages.length > activePageIndex) {
       nextPageIndex = activePageIndex + 1;
-    }else if (slideDirection == SlideDirection.leftToRight &&
-        activePageIndex -1 >= 0) {
+    } else if (slideDirection == SlideDirection.leftToRight &&
+        activePageIndex - 1 >= 0) {
       nextPageIndex = activePageIndex - 1;
     }
 
@@ -400,7 +355,8 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
       if (widget.pages.length - 1 > nextPageIndex &&
           slideDirection == SlideDirection.rightToLeft) {
         nextPageIndex++;
-      }else if (nextPageIndex > 0 && slideDirection == SlideDirection.leftToRight){
+      } else if (nextPageIndex > 0 &&
+          slideDirection == SlideDirection.leftToRight) {
         nextPageIndex--;
       }
     } else {
